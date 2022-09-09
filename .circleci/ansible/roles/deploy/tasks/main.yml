@@ -1,0 +1,20 @@
+---
+- name: "copy the package to ec2"
+  become: yes
+  copy:
+    src: ~/project/artifact.tar.gz
+    dest: ~/artifact.tar.gz
+    mode: '0755'
+
+- name: "untar the file"
+  become: yes
+  shell: tar -zxvf ~/artifact.tar.gz
+
+- name: "start the app"
+  become: yes
+  shell: |
+    cd ~/
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
+    npm start
