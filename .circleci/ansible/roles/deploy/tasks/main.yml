@@ -14,5 +14,15 @@
   become: yes
   shell: |
     cd ~/
+    export TYPEORM_ENTITIES=./src/modules/domain/**/entities/*.entity.ts
+    export TYPEORM_USERNAME=postgres
+    export TYPEORM_PASSWORD=postgres123
+    export TYPEORM_DATABASE=postgres
+    export TYPEORM_PORT=5432
+    export TYPEORM_HOST=database-2.cugdpktsyisy.us-east-1.rds.amazonaws.com
+    export TYPEORM_MIGRATIONS=./src/migrations/*.ts
+    export TYPEORM_MIGRATIONS_DIR=./src/migrations
+    export TYPEORM_CONNECTION=postgres
     npm install
-    npm run start
+    pm2 stop default
+    pm2 start npm -- start
