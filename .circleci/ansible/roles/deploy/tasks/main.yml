@@ -22,5 +22,7 @@
     export TYPEORM_MIGRATIONS=./src/migrations/*.ts
     export TYPEORM_MIGRATIONS_DIR=./src/migrations
     export TYPEORM_CONNECTION=postgres
+    sudo mkdir .pm2
+    sudo chown -R ubuntu:ubuntu .pm2
     npm install
-    nohup npm run start &
+    pm2 start npm -- start
