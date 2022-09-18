@@ -319,33 +319,32 @@ jobs:
 
   smoke-test:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/aws:2022.06
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: ["b9:e8:24:37:af:eb:d5:f5:14:00:37:b9:df:b7:17:ff"]
-      - run:
-          name: install aws-cli
-          command: |
-             sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip";
-             sudo unzip awscliv2.zip;
-             sudo ./aws/install;
-             aws --version
+#      - run:
+#          name: install aws-cli
+#          command: |
+#             sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip";
+#             sudo unzip awscliv2.zip;
+#             sudo ./aws/install;
+#             aws --version
              
       - run:
           name: Backend smoke test.
           command: |
+             curl https://www.google.com
              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output=text)
-             ssh -o StrictHostKeyChecking=no ubuntu@${BACKEND_IP} "if curl -v 'http://localhost:3030/api/status'; then exit 0; else exit 1; fi"
- #            export API_URL="http://${BACKEND_IP}:3030"
- #            echo "${API_URL}"
- #            curl -v "${BACKEND_IP}:3030/api/status"
- #            if curl "${API_URL}/api/status" | grep "ok"
- #            then
- #            exit 0
- #            else
- #            exit 1
- #            fi
+ #            ssh -o StrictHostKeyChecking=no ubuntu@${BACKEND_IP} "if curl -v 'http://localhost:3030/api/status'; then exit 0; else exit 1; fi"
+             export API_URL="http://${BACKEND_IP}:3030"
+             echo "${API_URL}"
+             curl -v "${BACKEND_IP}:3030/api/status"
+             if curl "${API_URL}/api/status" | grep "ok"
+             then
+             exit 0
+             else
+             exit 1
+             fi
              
       - run:
           name: Frontend smoke test.
