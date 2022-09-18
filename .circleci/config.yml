@@ -333,9 +333,8 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-             curl https://www.google.com
+             curl -v "https://www.google.com"
              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output=text)
- #            ssh -o StrictHostKeyChecking=no ubuntu@${BACKEND_IP} "if curl -v 'http://localhost:3030/api/status'; then exit 0; else exit 1; fi"
              export API_URL="http://${BACKEND_IP}:3030"
              echo "${API_URL}"
              curl -v "${BACKEND_IP}:3030/api/status"
