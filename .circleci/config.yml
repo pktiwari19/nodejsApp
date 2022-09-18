@@ -336,7 +336,7 @@ jobs:
           name: Backend smoke test.
           command: |
              export BACKEND_IP=$(aws ec2 describe-instances --query "Reservations[*].Instances[*].PublicIpAddress" --output=text)
-             ssh ubuntu@${BACKEND_IP}:"curl -v http://localhost:3030/api/status"
+             ssh ubuntu@${BACKEND_IP} "curl -v http://localhost:3030/api/status"
  #            export API_URL="http://${BACKEND_IP}:3030"
  #            echo "${API_URL}"
  #            curl -v "${BACKEND_IP}:3030/api/status"
