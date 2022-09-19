@@ -22,7 +22,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS = 1
+            export SUCCESS = 1
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
