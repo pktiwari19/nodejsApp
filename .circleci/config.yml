@@ -7,26 +7,28 @@ commands:
           name: Destroy environment 
           when: on_fail
           command: |
+            aws s3 rm s3://udapeople-${ID} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7};
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-#  revert-migrations:
-#    description: Revert the last migration if successfully run in the current workflow.
-#    parameters:
-#      # Add parameter here     
-#    steps:
-#      - run:
-#          name: Revert migrations
-          # Add when this will run
-#          command: |
-#            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-#            SUCCESS = 1
-#            if(( $SUCCESS==1 )); 
-#            then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-#              exit 1
-#            fi
+            
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      workflow_id:
+        type: string    
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            cat ~/project/backend/result.txt
+            SUCCESS = `cat ~/project/backend/result.txt`
+            if(( $SUCCESS==1 )); 
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
             
 jobs:
   build-frontend:
@@ -273,7 +275,8 @@ jobs:
              npm run build
              tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
              aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - destroy_environment      
+      - destroy_environment
+      - revert-migrations
                     
   deploy-backend:
     docker: 
@@ -315,7 +318,8 @@ jobs:
             echo "Contents  of the inventory.txt file is -------";
             cat inventory.txt;
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy_environment  
+      - destroy_environment
+      - revert-migrations
 
   smoke-test:
     docker:
@@ -356,7 +360,8 @@ jobs:
              else
              exit 1
              fi 
-
+      - destroy_environment
+      - revert-migrations
 #  cloudfront-update:
 #    docker: circleci/node:13.8.0
       # Docker image here that supports AWS CLI
