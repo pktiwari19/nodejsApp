@@ -7,7 +7,7 @@ commands:
           name: Destroy environment 
           when: on_fail
           command: |
-            aws s3 rm s3://udapeople-${ID} --recursive
+            aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7};
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             
@@ -16,7 +16,7 @@ commands:
     parameters:
       workflow_id: 
         type: string  
-        default: ${ID}
+        default: ${CIRCLE_WORKFLOW_ID}
     steps:
       - run:
           name: Revert migrations
