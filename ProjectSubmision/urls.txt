@@ -1,0 +1,8 @@
+Github repo url:
+https://github.com/pktiwari19/nodejsApp.git
+
+S3 bucket website public url:
+http://udapeople-946c6d4.s3-website-us-east-1.amazonaws.com/#/employees
+
+project backend url:
+http://ec2-3-93-212-189.compute-1.amazonaws.com:3030/api/status
